@@ -40,7 +40,10 @@ const crypto = require("crypto")
 
 const VerifyUser = async(req,res)=>{
     const {email , password} = req.body
-    if(email && password){
+    if(!email || !password){
+        res.status(200).json({"DATA":"username and password both parameter required"})
+        return
+    }
             let token = await VerifyToken(req.query.verify)
             if(token.length == 0 ){
                 res.status(200).json({"DATA":"Verification Token Does not Exist"})
@@ -69,10 +72,14 @@ const VerifyUser = async(req,res)=>{
             }else{
                 res.status(200).json({"DATA":"Wrong Email and Password"})
             }
-    }}
+    }
 
 const LoginUser = async (req,res)=>{
         const {email , password} = req.body
+        if(!email || !password){
+            res.status(200).json({"DATA":"username and password both parameter required"})
+            return
+        }
         let accverify= await VerifyAccount(email,1)
         let accnotverify=await VerifyAccount(email,0)
         if(accnotverify.length > 0){
@@ -87,6 +94,7 @@ const LoginUser = async (req,res)=>{
             return res.status(200).json({"DATA":"Wrong Email and Password"})
         }
 }
+
 
 
 module.exports = {RegisterUser,ListUser,LoginUser,VerifyUser}
