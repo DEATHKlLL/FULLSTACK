@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Your PG</title>
+    <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+    <div class="container" id="content-box">
+        <h2>Register Your PG</h2>
+
+        <!-- Step 1: Register PG -->
+        <form id="pgForm" enctype="multipart/form-data">
+            <label for="pgName">PG Name:</label>
+            <input type="text" id="pgName" required />
+        
+            <label for="pgAddress">Address:</label>
+            <input type="text" id="pgAddress" required />
+        
+            <label for="floors">Number of Floors:</label>
+            <input type="number" id="floors" min="1" required />
+        
+            <label>Amenities:</label>
+            <div class="amenities">
+                <input type="checkbox" id="food" name="amenities" value="Food" />
+                <label for="food">Food</label>
+                <input type="checkbox" id="laundry" name="amenities" value="Laundry" />
+                <label for="laundry">Laundry</label>
+                <input type="checkbox" id="wifi" name="amenities" value="WiFi" />
+                <label for="wifi">WiFi</label>
+                <input type="checkbox" id="parking" name="amenities" value="Parking" />
+                <label for="parking">Parking</label>
+            </div>
+        
+            <!-- Add Image Upload -->
+            <label for="pgImage">PG Image:</label>
+            <input type="file" id="pgImage" name="pgImage" accept="image/*" required />
+        
+            <button type="button" onclick="nextStep()">Next</button>
+        </form>
+        
+
+        <!-- Step 2: Add Rooms for Each Floor -->
+        <div id="roomsSection" style="display: none;">
+            <h3>Define Rooms for Each Floor</h3>
+            <div id="floorsContainer"></div>
+
+            <button type="button" onclick="submitRooms()">Next</button>
+        </div>
+
+        <!-- Step 3: Set Sharing Options for Each Room -->
+        <div id="sharingSection" style="display: none;">
+            <h3>Set Sharing for Each Room</h3>
+            <div id="roomsContainer"></div>
+
+            <button type="button" onclick="submitPG()">Register PG</button>
+        </div>
+
+        <div id="responseMessage"></div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
+

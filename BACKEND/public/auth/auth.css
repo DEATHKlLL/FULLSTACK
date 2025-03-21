@@ -1,0 +1,123 @@
+
+        body {
+            height: 100vh;
+            background-color: #f0f2f5;
+            font-family: Arial, sans-serif;
+            overflow:scroll;
+        }
+        .left-section {
+            width: 40%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            border-radius: 33px;
+            height: 550px;
+        }
+        .right-section {
+            border-radius: 33px;
+            width: 60%;
+            background: url('https://imgs.search.brave.com/DxMb8a6wXl-tQUIvztWBCUz95SNuUU0hD6p-xyCImcM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cmVhbHNpbXBsZS5j/b20vdGhtYi9HMjU0/d2d1UkhsUHFkTml4/TExsXzhaNHUySGs9/LzE1MDB4MC9maWx0/ZXJzOm5vX3Vwc2Nh/bGUoKTptYXhfYnl0/ZXMoMTUwMDAwKTpz/dHJpcF9pY2MoKS9B/R1BhcmVudHMtZ3Vl/c3RiZWRyb29tMTAy/ODJoaWdocmVzLTk4/OTcxMmQ4YjEwODRm/MDdhYmM3ZWNmMDE5/ODA3ZDE3LmpwZw') no-repeat center center/cover;
+            height: 500x;
+        }
+        .container {
+            padding: 30px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+        input, select {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .submit {
+            width: 100%;
+            padding: 10px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .toggle {
+            margin-top: 10px;
+            cursor: pointer;
+            color: #007BFF;
+        }
+        .forgot-password {
+            display: none;
+            margin-top: 10px;
+            color: #ff0000;
+            cursor: pointer;
+        }
+        .role-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 90%;
+            margin: 10px auto;
+        }
+        .role-container label {
+            font-weight: bold;
+        }
+        .role-container select {
+            width: auto;
+            flex-grow: 1;
+        }
+
+        /* Popup box styles */
+        .response-box {
+            position: fixed;
+            top: 20px;
+            left: 40%;
+            transform: translateX(-50%);
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            display: none;
+            z-index: 1000;
+            width: 300px;
+            height: 30px;
+            text-align: center;
+            font-weight: bold;
+            animation: pop-up 0.5s ease-out forwards;
+        }
+
+        /* Keyframe animation for popping up */
+        @keyframes pop-up {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+
+        /* header {
+            width: 100%;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000; 
+            height: 25px; 
+            line-height: 25px; 
+        } */
+        

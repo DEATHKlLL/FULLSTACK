@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUTH</title>
+    <link rel="stylesheet" type="text/css" href="./token.css">
+</head>
+<body>
+   <header id="header"></header>
+        <div class="container" id="login-container">
+            <form onsubmit="login()">
+            <h2>Login</h2>
+            <input type="email" id="login-email" placeholder="Email" required>
+            <input type="password" id="login-password" placeholder="Password" required>
+            <input type="submit" class="submit" value="Login">
+            </form>
+        </div>
+
+
+    <div id="response-box" class="response-box"></div>
+    <footer id="footer"></footer>
+
+
+    <script src="./token.js">
+    </script>
+<script>
+    fetch('/layout/header.html')
+        .then(response => response.text())
+        .then(data => {
+            
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = data;
+            const headerContent = tempDiv.querySelector('header');  
+            document.getElementById('header').innerHTML = headerContent.innerHTML; 
+        });
+
+    fetch('/layout/footer.html')
+        .then(response => response.text())
+        .then(data => {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = data;
+            const footerContent = tempDiv.querySelector('footer');  
+            document.getElementById('footer').innerHTML = footerContent.innerHTML;  
+        });
+</script>
+</body>
+</html>

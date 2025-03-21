@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PG Booking Dashboard</title>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .sidebar {
+            width: 250px;
+            background: white;
+            color:black;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            left: -300px;
+            height: 100%;
+            transition: left 0.3s;
+        }
+        .sidebar a {
+            
+            color:black;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+        }
+        .sidebar a:hover {
+            background:gray;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            background: white;
+            margin-left: 0;
+            transition: margin-left 0.3s;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: black;
+            color: white;
+            padding: 15px 20px;
+        }
+        .content-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .menu-button {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: #fff;
+            color:black;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 1000;
+            width: 50px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <button class="menu-button" onclick="toggleSidebar()">☰</button>
+    <div class="sidebar" id="sidebar">
+	<h2></h2>
+        <h2>BOOK YOUR PG</h2>
+        <a href="/">Dashboard</a>
+        <a onclick="profile()" href="#">Profile</a>
+        <a onclick="PGList()" href="#">PG Listing</a>
+        <a href="#">Settings</a>
+        <a href="/logout">Logout</a>
+
+    </div>
+    <div class="main-content" id="main-content">
+        <header style="background-color: #ffffff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 16px;">
+            <div class="container2" style="width: 90%; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+                <b href="#" class="brand" style="font-size: 1.25rem; font-weight: bold; color: #4a5568; font-style: initial;">
+                    YourPG
+                </b>
+                <nav style="display: flex; gap: 24px;">
+                    <a href="/" style="color: #4a5568; text-decoration: none; transition: color 0.2s;">Home</a>
+                    <a href="#" style="color: #4a5568; text-decoration: none; transition: color 0.2s;">About</a>
+                    <a href="#" style="color: #4a5568; text-decoration: none; transition: color 0.2s;">Services</a>
+                    <a href="#" style="color: #4a5568; text-decoration: none; transition: color 0.2s;">Contact</a>
+                    <a href="/auth" style="color: #4a5568; text-decoration: none; transition: color 0.2s;">Login/Register</a>
+                </nav>
+                <button class="md:hidden" id="menu-toggle" style="display: none; font-size: 1.5rem; color: #4a5568; background: none; border: none;">☰</button>
+            </div>
+        </header>
+        <div class="content-box" id="box" style="">
+                        <h2>Welcome to Your PG Booking System</h2>
+            <p>Here you can manage your PGs properties, bookings, and users efficiently.</p>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        </div>
+        <div style="padding-top: 3px;padding-bottom: 3px;">
+        <footer style="background-color: #ffffff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  padding: 2px; text-align: center; color: #4a5568;">
+            <div class="container1" style="margin: 0 auto; padding: 0 1rem;">
+                &copy; 2025 YourPG . All rights reserved.
+                <div class="social-icons" style="display: flex; justify-content: center; gap: 1rem; margin-top: 1rem;">
+                    <a href="#" aria-label="Facebook" style="color: #4a5568; transition: color 0.3s;">
+                        <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" style="width: 1.5rem; height: 1.5rem;">
+                    </a>
+                    <a href="#" aria-label="Twitter" style="color: #4a5568; transition: color 0.3s;">
+                        <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter" style="width: 1.5rem; height: 1.5rem;">
+                    </a>
+                    <a href="#" aria-label="Instagram" style="color: #4a5568; transition: color 0.3s;">
+                        <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram" style="width: 1.5rem; height: 1.5rem;">
+                    </a>
+                    <a href="#" aria-label="LinkedIn" style="color: #4a5568; transition: color 0.3s;">
+                        <img src="https://cdn-icons-png.flaticon.com/512/733/733561.png" alt="LinkedIn" style="width: 1.5rem; height: 1.5rem;">
+                    </a>
+                </div>
+            </div>
+        </footer>
+        </div>
+    </div>
+
+    
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            const mainContent = document.getElementById("main-content");
+            if (sidebar.style.left === "0px") {
+                sidebar.style.left = "-300px";
+                mainContent.style.marginLeft = "0";
+            } else {
+                sidebar.style.left = "0px";
+                mainContent.style.marginLeft = "300px";
+            }
+        }
+        async function profile() {
+            console.log("meow");
+            fetch("/api/profile", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'include'
+            }).then(response => {
+                response.json()  // Ensure this is handled properly as a promise
+            .then(data => {
+                if(data.mssg == "INVALID"){
+                window.location.href = '/auth';
+            }else{
+                const div = document.querySelector(".content-box");
+                div.innerHTML = `<strong> EMAIL:-</strong>&nbsp${data.email} <br> <strong>ROLE</strong>:-&nbsp${data.role} `;
+                testDiv.innerHTML = "";
+            }
+
+            })
+        });
+        
+    }
+    function PGList() {
+        fetch('/pg/register')
+        .then(response => response.text())
+        .then(data => {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = data;
+            const headerContent = tempDiv.querySelector('#content-box'); 
+            const link = document.createElement('link');
+link.rel = 'stylesheet';       
+link.href = '/pg/style.css';
+document.head.appendChild(link);
+const script = document.createElement('script');
+script.src = '/pg/script.js'; 
+script.async = true; 
+document.body.appendChild(script);
+
+                    document.getElementById('box').innerHTML = headerContent.innerHTML;
+
+
+        });
+    }
+    </script>
+</body>
+</html>
