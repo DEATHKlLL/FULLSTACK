@@ -1,5 +1,15 @@
 
 
+function showResponse(message, color) {
+    const responseBox = document.getElementById("response-box");
+    responseBox.textContent = message;
+    responseBox.style.backgroundColor = color;
+    responseBox.style.display = "block";
+    setTimeout(() => {
+        responseBox.style.display = "none";
+    }, 2000);
+}
+
 
 async function fetchUsers() {
     const searchQuery = document.getElementById("search").value + "";
@@ -28,7 +38,7 @@ async function fetchUsers() {
         `;
     })
 }
-n
+
 async function deleteUser(userId) {
     if (confirm("Are you sure you want to delete this user?")) {
         const responsed = await fetch(`/admin/user?id=${userId}`, {
@@ -38,13 +48,20 @@ async function deleteUser(userId) {
                 "Content-Type": "application/json",
             },
         });
-        console.log(responsed.status);
-        fetchUsers();
+        const res = await responsed.json();
+        if(responsed.status==200){
+            showResponse(res.mssg,"red")
+            fetchUsers()
+        }else{
+            showResponse(res.mssg,"red")
+            fetchUsers()
+        }
     }
-    
 }
 
-// Block user function
+
+
+
 async function blockUser(userId) {
     const blockTime = prompt("Enter block duration in hours:");
     if (blockTime && !isNaN(blockTime)) {
@@ -57,6 +74,60 @@ async function blockUser(userId) {
         fetchUsers();
     }
 }
-
-// Load users initially
 fetchUsers();
+
+function logout(){
+        showResponse("you are being Logged Out","red")
+        setTimeout(() => {
+            window.location.href = '/logout';
+        }, 500);
+}
+
+async function fetchPGs() {
+    const response = await fetch(`/pg/approval`,{
+        method: "GET",
+        credentials: "include"
+    });
+    const pgData = await response.json();
+    if(response.status == 200){
+        displayPGs(pgData);
+    }  
+}
+
+
+function displayPGs(pgData) {
+    const container = document.querySelector(".containermanage")
+    const pgList = document.createElement("div");
+    pgList.id ="pgList";
+    pgList.className="pg-list";
+    
+    if (pgData.length === 0) {
+        return;
+    }
+    
+    document.getElementById("pgres").innerHTML="<h2>PG Registered</h2>";
+    pgData.forEach(pg => {
+        const pgCard = document.createElement("div");
+        pgCard.classList.add("pg-card");
+        pgCard.innerHTML = `
+            <h3>${pg.name}</h3>
+            <img src="/uploads/${pg.img_path[0]}" alt="${pg.name}">
+            <p>${pg.address}</p>
+            <p><strong>Price:</strong> ₹${pg.Price}</p>
+            <p><strong>Amenities:</strong> ${pg.emenities.join(", ")}</p>
+            <strong style="color:${pg.Approved == 1 ? 'green' : 'red'}">${pg.Approved == 1 ? 'APPROVED' : 'PENDING'}</strong>
+        `;
+        pgList.appendChild(pgCard);
+    });
+    container.replaceWith(pgList);
+}
+
+
+
+
+
+
+
+
+
+

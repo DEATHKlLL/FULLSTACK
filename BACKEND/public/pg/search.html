@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PG Search & Filter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input, select, .checkbox-group {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: white;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pg-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .pg-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .pg-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .pg-card img {
+    width: 100%;
+    height: 250px;  /* Adjusted height */
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+        .pg-card h3 {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .pg-card p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .amenities {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .filter-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Search & Filter PGs</h2>
+
+    <div class="filter-container">
+        <input type="text" id="searchBar" placeholder="Search by PG name...">
+
+        <select id="priceFilter">
+            <option value="">All Prices</option>
+            <option value="low">Below ₹5,000</option>
+            <option value="mid">₹5,000 - ₹10,000</option>
+            <option value="high">Above ₹10,000</option>
+        </select>
+
+        <div class="checkbox-group">
+            <label><input type="checkbox" class="amenity-filter" value="Food"> Food</label>
+            <label><input type="checkbox" class="amenity-filter" value="WiFi"> WiFi</label>
+            <label><input type="checkbox" class="amenity-filter" value="Laundry"> Laundry</label>
+            <label><input type="checkbox" class="amenity-filter" value="Parking"> Parking</label>
+        </div>
+    </div>
+
+    <div class="pg-list" id="pgList"></div>
+
+    <script>
+        const pgData = [
+            { id: 1, pgName: "Green PG", pgAddress: "123 Main St", price: 4000, amenities: ["Food", "WiFi"], image: "https://source.unsplash.com/250x180/?hostel,building" },
+            { id: 2, pgName: "Blue PG", pgAddress: "456 Park Ave", price: 8000, amenities: ["Laundry", "Parking"], image: "https://source.unsplash.com/250x180/?apartment,home" },
+            { id: 3, pgName: "Red PG", pgAddress: "789 Elm St", price: 12000, amenities: ["Food", "Parking"], image: "https://source.unsplash.com/250x180/?room,bed" },
+            { id: 4, pgName: "Yellow PG", pgAddress: "101 Oak St", price: 7000, amenities: ["WiFi", "Laundry"], image: "https://source.unsplash.com/250x180/?hotel,interior" },
+            { id: 5, pgName: "Sky PG", pgAddress: "202 Pine St", price: 9500, amenities: ["Food", "Parking", "WiFi"], image: "https://source.unsplash.com/250x180/?house,modern" }
+        ];
+
+        const searchBar = document.getElementById("searchBar");
+        const priceFilter = document.getElementById("priceFilter");
+        const amenityFilters = document.querySelectorAll(".amenity-filter");
+        const pgList = document.getElementById("pgList");
+
+        function displayPGs() {
+            const searchText = searchBar.value.toLowerCase();
+            const selectedPrice = priceFilter.value;
+            const selectedAmenities = [...amenityFilters].filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
+
+            pgList.innerHTML = "";
+
+            pgData.forEach(pg => {
+                const matchesSearch = pg.pgName.toLowerCase().includes(searchText);
+                const matchesPrice = 
+                    selectedPrice === "" ||
+                    (selectedPrice === "low" && pg.price < 5000) ||
+                    (selectedPrice === "mid" && pg.price >= 5000 && pg.price <= 10000) ||
+                    (selectedPrice === "high" && pg.price > 10000);
+
+                const matchesAmenities = 
+                    selectedAmenities.length === 0 || 
+                    selectedAmenities.every(amenity => pg.amenities.includes(amenity));
+
+                if (matchesSearch && matchesPrice && matchesAmenities) {
+                    const pgCard = document.createElement("div");
+                    pgCard.classList.add("pg-card");
+                    pgCard.innerHTML = `
+                        <img src="${pg.image}" alt="${pg.pgName}">
+                        <h3>${pg.pgName}</h3>
+                        <p>${pg.pgAddress}</p>
+                        <p>Price: ₹${pg.price.toLocaleString()}</p>
+                        <p class="amenities">Amenities: ${pg.amenities.join(", ")}</p>
+                    `;
+                    pgList.appendChild(pgCard);
+                }
+            });
+        }
+
+        searchBar.addEventListener("input", displayPGs);
+        priceFilter.addEventListener("change", displayPGs);
+        amenityFilters.forEach(checkbox => checkbox.addEventListener("change", displayPGs));
+
+        displayPGs(); // Initial call to display all PGs
+    </script>
+
+</body>
+</html>

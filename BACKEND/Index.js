@@ -5,6 +5,9 @@ const route = require("./Routes/route")
 const cookieParser = require('cookie-parser');
 const { verifyToken } = require("./Utils/JWT")
 const app = express()
+app.set('trust proxy', 1);
+app.set('view engine','ejs');
+app.set('views', './public');
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static("./public"))
 app.use(cookieParser());

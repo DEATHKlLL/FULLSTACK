@@ -28,19 +28,18 @@
             <form onsubmit="login()">
             <h2>Login</h2>
             <input type="email" id="login-email" placeholder="Email" required>
-            <input type="password" id="login-password" placeholder="Password" required>
-            <input type="submit" class="submit" value="Login">
+            <input type="password" id="login-password" placeholder="Password" required >
+            <input type="submit" class="submit" id="submit" value="Login">
             <p class="forgot-password" id="forgot-password" onclick="forgotPassword()">Forgot Password?</p>
             <p class="toggle" onclick="toggleForm()">Don't have an account? Register</p>
             </form>
         </div>
-
         <div class="container" id="register-container" style="display: none;">
             <form  onsubmit="register()">
             <h2>Register</h2>
-            <input type="text" id="register-username" placeholder="Username" required>
+            <input type="text" id="register-username" placeholder="Username" required pattern="^[a-zA-Z0-9_]{2,30}$">
             <input type="email" id="register-email" placeholder="Email" required>
-            <input type="password" id="register-password" placeholder="Password" required>
+            <input type="password" id="register-password" placeholder="Password" required >
             <div class="role-container">
                 <label for="register-role">Role:</label>
                 <select id="register-role">
@@ -81,6 +80,28 @@
     </footer>
     <script src="./auth.js">
         
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const passwordInput = document.getElementById("register-password"); // Change ID if needed
+
+    passwordInput.addEventListener("input", function () {
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
+
+        if (!passwordPattern.test(passwordInput.value)) {
+            passwordInput.setCustomValidity(
+                "Password must:\n" +
+                "- Be 8-16 characters long\n" +
+                "- Include at least one uppercase letter\n" +
+                "- Include at least one lowercase letter\n" +
+                "- Include at least one number\n" +
+                "- Include at least one special character (@$!%*?&)"
+            );
+        } else {
+            passwordInput.setCustomValidity(""); // Reset message when valid
+        }
+    });
+});
     </script>
 </body>
 </html>

@@ -12,21 +12,23 @@ function toggleForm() {
 
         function showResponse(message, color) {
             const responseBox = document.getElementById("response-box");
+            const button = document.getElementById("submit");
             responseBox.textContent = message;
             responseBox.style.backgroundColor = color;
             responseBox.style.display = "block";
-
-            // Hide the box after 3 seconds
             setTimeout(() => {
                 responseBox.style.display = "none";
-            }, 3000);
+                button.disabled = false;
+            }, 2000);
+            
         }
 
         function login() {
             event.preventDefault();
             const email = document.getElementById("login-email").value;
             const password = document.getElementById("login-password").value;
-            
+            const button = document.getElementById("submit");
+            button.disabled = true;
             fetch("/login", {
                 method: "POST",
                 headers: {
@@ -58,6 +60,9 @@ function toggleForm() {
                     setTimeout(() => {
                         toggleForm();
                     }, 1000); 
+                }
+                else{
+                    showResponse(data.error ,'red');
                 }
             }
         }
@@ -135,23 +140,5 @@ function toggleForm() {
         }
 
 
-// Detect scroll position and show/hide header and footer
-window.addEventListener('scroll', () => {
-    const header = document.querySelector('header');
-    const footer = document.querySelector('footer');
 
-    // If at the top of the page, show the header
-    if (window.scrollY === 0) {
-        header.classList.remove('hidden');
-        footer.classList.remove('hidden');
-    } else {
-        // If not at the top, hide the header and footer
-        header.classList.add('hidden');
-        footer.classList.add('hidden');
-    }
 
-    // If at the bottom of the page, show the footer
-    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight) {
-        footer.classList.remove('hidden');
-    }
-});

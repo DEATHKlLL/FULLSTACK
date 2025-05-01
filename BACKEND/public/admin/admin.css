@@ -113,3 +113,92 @@ body {
     font-size: 16px;
     z-index: 1000;
 }
+        /* Popup box styles */
+        .response-box {
+            position: fixed;
+            top: 20px;
+            left: 40%;
+            transform: translateX(-50%);
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            display: none;
+            z-index: 1000;
+            width: 300px;
+            height: 30px;
+            text-align: center;
+            font-weight: bold;
+            animation: pop-up 0.5s ease-out forwards;
+        }
+
+        /* Keyframe animation for popping up */
+        @keyframes pop-up {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .pg-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 300px));
+            gap: 15px;
+            justify-content: left;
+            padding: 10px;
+        }
+
+        .pg-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .pg-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .pg-card img {
+            width:150px;
+            height: 180px;
+            border-radius: 10px;
+        }
+        .pg-card h3 {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .pg-card p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .pg-thumb {
+            width: 120px;
+            height: auto;
+            display: block;
+            margin-top: 5px;
+        }
+        .pg-detailed-view {
+            padding: 20px;
+            border: 1px solid #aaa;
+            border-radius: 10px;
+            background-color: #fdfdfd;
+        }
+        .pg-image-full {
+            width: 150px;
+            margin: 10px;
+        }
+        .pg-actions {
+            margin-top: 20px;
+        }

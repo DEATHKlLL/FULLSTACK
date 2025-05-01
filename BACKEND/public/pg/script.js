@@ -1,106 +1,192 @@
+const pgImagesInput = document.getElementById('pgImages');
+const imagePreview = document.getElementById('imagePreview');
+const uploadArea = document.getElementById('uploadArea');
 
-let floorsData = [];
+// Store selected files
+let filesArray = [];
+function renderSinglePreview(file, index) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+        const container = document.createElement('div');
+        container.classList.add('preview-image-container');
+        container.setAttribute('data-index', index);
+        container.style.position = 'relative';
 
-function nextStep() {
-    const pgName = document.getElementById("pgName").value;
-    const pgAddress = document.getElementById("pgAddress").value;
-    const floors = parseInt(document.getElementById("floors").value);
+        const img = document.createElement('img');
+        img.src = event.target.result;
+        img.classList.add('preview-image');
 
-    if (!pgName || !pgAddress || !floors) {
-        alert("Please fill all fields.");
-        return;
-    }
+        const removeBtn = document.createElement('button');
+        removeBtn.innerHTML = '×';
+        removeBtn.classList.add('remove-btn');
+        removeBtn.onclick = (e) => {
+            e.preventDefault();
+            removeFile(index);
+        };
 
-    // Store PG basic data
-    floorsData = Array.from({ length: floors }, () => ({
-        rooms: []
-    }));
+        const zoomBtn = document.createElement('button');
+        zoomBtn.innerHTML = '🔍';
+        zoomBtn.classList.add('zoom-btn');
+        zoomBtn.onclick = (e) => {
+            e.preventDefault();
+            openModal(event.target.result);
+        };
 
-    // Step 2: Show room configuration
-    document.getElementById("pgForm").style.display = "none";
-    document.getElementById("roomsSection").style.display = "block";
-
-    const floorsContainer = document.getElementById("floorsContainer");
-    floorsContainer.innerHTML = "";
-
-    // Create fields for each floor
-    floorsData.forEach((_, index) => {
-        floorsContainer.innerHTML += `
-            <label for="floor${index + 1}">Floor ${index + 1} - Number of Rooms:</label>
-            <input type="number" id="floor${index + 1}" min="1" required />
-        `;
-    });
+        container.appendChild(img);
+        container.appendChild(removeBtn);
+        container.appendChild(zoomBtn);
+        imagePreview.appendChild(container);
+    };
+    reader.readAsDataURL(file);
 }
 
-function submitRooms() {
-    floorsData.forEach((floor, index) => {
-        const rooms = parseInt(document.getElementById(`floor${index + 1}`).value);
-        if (!rooms) {
-            alert(`Enter number of rooms for Floor ${index + 1}`);
-            return;
+pgImagesInput.addEventListener('change', handleFiles);
+
+// Drag & Drop
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+});
+
+uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+});
+
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    addFiles(droppedFiles);
+});
+
+function handleFiles(e) {
+    const selectedFiles = Array.from(e.target.files);
+    addFiles(selectedFiles);
+}
+function updateInputFiles() {
+    const dataTransfer = new DataTransfer();
+    filesArray.forEach(file => dataTransfer.items.add(file));
+    pgImagesInput.files = dataTransfer.files;
+}
+
+function addFiles(newFiles) {
+    newFiles.forEach((file) => {
+        if (file.type.startsWith('image/')) {
+            filesArray.push(file);
+            renderSinglePreview(file, filesArray.length - 1); 
         }
-        floorsData[index].rooms = Array.from({ length: rooms }, () => ({
-            sharing: ""
-        }));
     });
 
-    // Step 3: Show sharing configuration
-    document.getElementById("roomsSection").style.display = "none";
-    document.getElementById("sharingSection").style.display = "block";
-
-    const roomsContainer = document.getElementById("roomsContainer");
-    roomsContainer.innerHTML = "";
-
-    // Create fields for each room
-    floorsData.forEach((floor, floorIndex) => {
-        floor.rooms.forEach((_, roomIndex) => {
-            roomsContainer.innerHTML += `
-                <label>Floor ${floorIndex + 1} - Room ${roomIndex + 1}:</label>
-                <select id="room${floorIndex}-${roomIndex}">
-                    <option value="2 Sharing">2 Sharing</option>
-                    <option value="3 Sharing">3 Sharing</option>
-                    <option value="4 Sharing">4 Sharing</option>
-                </select>
-            `;
-        });
-    });
+    updateInputFiles();
 }
 
-async function submitPG() {
-    // Collect sharing data
-    floorsData.forEach((floor, floorIndex) => {
-        floor.rooms.forEach((_, roomIndex) => {
-            const sharing = document.getElementById(`room${floorIndex}-${roomIndex}`).value;
-            floorsData[floorIndex].rooms[roomIndex].sharing = sharing;
-        });
+
+function removeFile(index) {
+    filesArray.splice(index, 1);
+
+    // Remove the specific image DOM element
+    const target = imagePreview.querySelector(`[data-index="${index}"]`);
+    if (target) target.remove();
+
+    // Re-index remaining items so further remove buttons work correctly
+    Array.from(imagePreview.children).forEach((child, i) => {
+        child.setAttribute('data-index', i);
+        const btn = child.querySelector('.remove-btn');
+        if (btn) {
+            btn.onclick = (e) => {
+                e.preventDefault();
+                removeFile(i);
+            };
+        }
     });
 
-    // Create FormData object
-    const formData = new FormData();
-    formData.append("pgName", document.getElementById("pgName").value);
-    formData.append("pgAddress", document.getElementById("pgAddress").value);
-    formData.append("pgImage", document.getElementById("pgImage").files[0]);
-    formData.append("floors", JSON.stringify(floorsData));
+    updateInputFiles();
+}
+
+
+function renderPreview() {
+    imagePreview.innerHTML = '';
+    filesArray.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const container = document.createElement('div');
+            container.classList.add('preview-image-container');
+            container.style.position = 'relative';
+
+            const img = document.createElement('img');
+            img.src = event.target.result;
+            img.classList.add('preview-image');
+
+            // ❌ Remove Button
+            const removeBtn = document.createElement('button');
+            removeBtn.innerHTML = '×';
+            removeBtn.classList.add('remove-btn');
+            removeBtn.onclick = () => removeFile(index);
+
+            // 🔍 Zoom Button
+            const zoomBtn = document.createElement('button');
+            zoomBtn.innerHTML = '🔍';
+            zoomBtn.classList.add('zoom-btn');
+            zoomBtn.onclick = () => openModal(event.target.result);
+
+            container.appendChild(img);
+            container.appendChild(removeBtn);
+            container.appendChild(zoomBtn);
+            imagePreview.appendChild(container);
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // Update input's FileList
+    const dataTransfer = new DataTransfer();
+    filesArray.forEach(file => dataTransfer.items.add(file));
+    pgImagesInput.files = dataTransfer.files;
+}
+
+// Modal image view
+const modal = document.getElementById('imageModal');
+const modalImg = document.getElementById('modalImage');
+const closeModal = document.querySelector('.closeModal');
+
+function openModal(src) {
+    modal.style.display = 'flex';
+    modalImg.src = src;
+}
+
+closeModal.onclick = () => {
+    modal.style.display = 'none';
+};
+
+window.onclick = (event) => {
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+};
+
+document.getElementById("pgForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
 
     try {
         const response = await fetch("/pg/register", {
             method: "POST",
-            body: formData
+            body: formData,
         });
 
         const result = await response.json();
-        const messageBox = document.getElementById("responseMessage");
 
         if (response.ok) {
-            messageBox.style.color = "green";
-            messageBox.textContent = "PG Registered Successfully!";
+            showResponse("PG Registered","green")
+            setTimeout(() => {
+                window.location.href= "/";
+            }, 1000); 
+            
         } else {
-            messageBox.style.color = "red";
-            messageBox.textContent = result.error || "Failed to register PG.";
+            showResponse("Failed to register PG: " + result.err,"red");
         }
     } catch (error) {
-        console.error("Error:", error);
-        document.getElementById("responseMessage").style.color = "red";
-        document.getElementById("responseMessage").textContent = "Server Error!";
+        showResponse("Error submiting the form:- " + error.err,"red");
     }
-}
+});

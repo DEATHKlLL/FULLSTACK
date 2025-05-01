@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PG Booking Dashboard</title>
-    <link rel="stylesheet" href="/admin/admin.css">
+    <link rel="stylesheet" href="/Owner/owner.css">
 </head>
 <body>
 
@@ -13,9 +13,11 @@
 	<h2></h2>
         <h2>BOOK YOUR PG</h2>
         <a href="/">Dashboard</a>
-        <a onclick="profile()" href="#">Profile</a>
-        <a href="#approve" onclick="fetchPGs()">PG Approval</a>
-        <a href="#" onclick="logout()">Logout</a>
+        <a href="#profile" onclick="profile()" >Profile</a>
+        <a href="#pglist" onclick="PGList()" >PG Listing</a>
+        <a href="#">Settings</a>
+        <a href="#logout" onclick="logout()">Logout</a>
+
     </div>
     <div class="main-content" id="main-content">
         <header style="background-color: #ffffff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 16px;">
@@ -28,36 +30,23 @@
                     <a href="#" style="color: #4a5568; text-decoration: none; transition: color 0.2s;">About</a>
                     <a href="#" style="color: #4a5568; text-decoration: none; transition: color 0.2s;">Services</a>
                     <a href="#" style="color: #4a5568; text-decoration: none; transition: color 0.2s;">Contact</a>
-                    <a href="#" onclick="profile()" style="color: #4a5568; text-decoration: none; transition: color 0.2s;">Admin</a>
+                    <a href="#profile" onclick="profile()" style="color: #4a5568; text-decoration: none; transition: color 0.2s;"><%= username %></a>
                 </nav>
                 <button class="md:hidden" id="menu-toggle" style="display: none; font-size: 1.5rem; color: #4a5568; background: none; border: none;">☰</button>
             </div>
         </header>
-        <div class="content-box" >
-                        <h2>Welcome to admin dashboard</h2>
-            <p>Here you can manage User account by either deleting or blocking them, and manage PG Listing by approving or rejecting the PGs.</p>
-            <br><br><br>
+        <div class="content-box" id="box" >
+                        <h2>Welcome to Your PG Booking System</h2>
+            <p>Here you can manage your PGs properties, bookings, and users efficiently.</p>
             <h2 id="pgres"></h2>
-            <div class="containermanage">
-                <h2>Admin Panel - Manage Users</h2>
-                <input type="text" id="search" placeholder="Search users..." onkeyup="fetchUsers()" >
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="userTable"></tbody>
-                </table>
-            </div>
-            <br><br><br><br><br><br><br>
+            <div class="pg-list" id="pgList"></div>
+            <br>
+            <br>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         </div>
+
         <div style="padding-top: 3px;padding-bottom: 3px;">
-        <div id="response-box" class="response-box"></div>
+            <div id="response-box" class="response-box"></div>
         <footer style="background-color: #ffffff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  padding: 2px; text-align: center; color: #4a5568;">
             <div class="container1" style="margin: 0 auto; padding: 0 1rem;">
                 &copy; 2025 YourPG . All rights reserved.
@@ -81,43 +70,8 @@
     </div>
 
     
-    <script src="/admin/admin.js">
-
+    <script src="/Owner/owner.js">
         
-    </script>
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById("sidebar");
-            const mainContent = document.getElementById("main-content");
-            if (sidebar.style.left === "0px") {
-                sidebar.style.left = "-300px";
-                mainContent.style.marginLeft = "0";
-            } else {
-                sidebar.style.left = "0px";
-                mainContent.style.marginLeft = "300px";
-            }
-        }
-        async function profile() {
-            fetch("/api/profile", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: 'include'
-            }).then(response => {
-                response.json()  // Ensure this is handled properly as a promise
-            .then(data => {
-                if(data.mssg == "INVALID"){
-                window.location.href = '/auth';
-            }else{
-                
-                const div = document.querySelector(".containermanage");
-                div.innerHTML = `<strong> EMAIL:-</strong>&nbsp${data.email} <br> <strong>ROLE</strong>:-&nbsp${data.role} `;
-            }
-            })
-        });
-    }
-
     </script>
 </body>
 </html>

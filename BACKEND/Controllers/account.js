@@ -5,8 +5,10 @@ const {cookie,verifyToken} = require("./../Utils/JWT")
 const {account,Token} = require("./../modals/account_s")
 const {Op} = require("sequelize")
 const fs = require('fs');
+const {upload}= require("../Utils/multer")
 
- const RegisterUser =async (req,res)=>{
+
+const RegisterUser =async (req,res)=>{
     const {username , password , email ,role} = req.body
     try{
         if(!password){
@@ -145,16 +147,18 @@ const file = async(req,res)=>{
 const index = async(req,res)=>{
     const c=req.cookies.check
     if(!c){
-        res.sendFile("/public/Seeker.html",{root:__dirname+"/../"})
+        res.sendFile("/public/index1.html",{root:__dirname+"/../"})
     }else{
-        const d= await verifyToken(c);
+        const d = await verifyToken(c);
+        let acc= await account.findAll({where:{email:d.email}})
         if(d.role == "OWNER"){
-            res.sendFile("/public/Owner.html",{root:__dirname+"/../"})
+            res.render('Owner/Owner',{username:acc[0].username})
         }else if(d.role == "ADMIN"){
             res.sendFile("/public/admin/Admin.html",{root:__dirname+"/../"})
         }
         else{
-            res.sendFile("/public/Seeker.html",{root:__dirname+"/../"})
+            console.log(acc)
+            res.render('Seeker/Seeker',{username:acc[0].username})
         }
     }
 }
@@ -167,7 +171,6 @@ const usersearch =async(req,res)=>{
     const d= await verifyToken(c)
     try{
         if(d.role=="ADMIN"){
-            console.log(req.query.search)
             if(req.query.search || req.query.search==""){
                 const query = await account.findAll({
                     where: {email: {[Op.like]: "%"+req.query.search+"%"},id:{[Op.ne]:1}},
@@ -175,8 +178,12 @@ const usersearch =async(req,res)=>{
                   });
                 res.status(200).json(query)
             }else if(req.query.id){
-                await account.destroy({where:{id:req.query.id}})
-                res.status(200)
+                const x= await account.destroy({where:{id:req.query.id}})
+                if(x){
+                    res.status(200).json({mssg:"User Deleted"})
+                }else{
+                    res.status(500).json({mssg:"User not Deleted"})
+                }
             }
             else{
               res.status(500)
@@ -186,7 +193,7 @@ const usersearch =async(req,res)=>{
             res.status(500).json({mssg:"NOT AUTHORISED"})
         }
     }catch(error){
-        console.log("errror")
+        console.log("error")
     }
 }
 
@@ -201,21 +208,6 @@ const profile = async(req,res)=>{
             res.json({username:d.username,email:d.email,role:d.role})}
         else{
             res.json({mssg:"INVALID"})
-        }
-    }
-}
-
-const pglist = async(req,res)=>{
-    console.log("test1")
-    const c=req.cookies.check
-    if(!c){
-        res.json({mssg:"LOGIN FIRST"})
-    }else{
-        const d= await verifyToken(c);
-        if(d.role == "OWNER"){
-            console.log(res);
-        }else{
-            res.json({mssg:"Dont has permission"})
         }
     }
 }
@@ -270,4 +262,4 @@ const forgetpass2post = async(req,res)=>{
     
 }
 
-module.exports = {forgotpass,pglist,profile,RegisterUser,ListUser,LoginUser,VerifyUser,index,file,logout,usersearch}
+module.exports = {forgotpass,profile,RegisterUser,ListUser,LoginUser,VerifyUser,index,file,logout,usersearch}

@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 
 const sendVerificationEmail = async (email, token) => {
 
-    const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
+    const verificationLink = `https://huge-akita-glad.ngrok-free.app/token?verify=${token}`;
     
     const mail = {
         from: process.env.emailuser,

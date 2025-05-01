@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PG Booking Dashboard</title>
-    <link rel="stylesheet" href="/admin/admin.css">
+    <link rel="stylesheet" href="/Seeker/seeker.css">
+
 </head>
 <body>
 
@@ -14,7 +15,7 @@
         <h2>BOOK YOUR PG</h2>
         <a href="/">Dashboard</a>
         <a onclick="profile()" href="#">Profile</a>
-        <a href="#approve" onclick="fetchPGs()">PG Approval</a>
+        <a href="#">PG Booking</a>
         <a href="#" onclick="logout()">Logout</a>
     </div>
     <div class="main-content" id="main-content">
@@ -28,36 +29,42 @@
                     <a href="#" style="color: #4a5568; text-decoration: none; transition: color 0.2s;">About</a>
                     <a href="#" style="color: #4a5568; text-decoration: none; transition: color 0.2s;">Services</a>
                     <a href="#" style="color: #4a5568; text-decoration: none; transition: color 0.2s;">Contact</a>
-                    <a href="#" onclick="profile()" style="color: #4a5568; text-decoration: none; transition: color 0.2s;">Admin</a>
+                    <a href="#profile" onclick="profile()" style="color: #4a5568; text-decoration: none; transition: color 0.2s;"><%= username %></a>
                 </nav>
                 <button class="md:hidden" id="menu-toggle" style="display: none; font-size: 1.5rem; color: #4a5568; background: none; border: none;">☰</button>
             </div>
         </header>
-        <div class="content-box" >
-                        <h2>Welcome to admin dashboard</h2>
-            <p>Here you can manage User account by either deleting or blocking them, and manage PG Listing by approving or rejecting the PGs.</p>
-            <br><br><br>
-            <h2 id="pgres"></h2>
-            <div class="containermanage">
-                <h2>Admin Panel - Manage Users</h2>
-                <input type="text" id="search" placeholder="Search users..." onkeyup="fetchUsers()" >
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="userTable"></tbody>
-                </table>
-            </div>
-            <br><br><br><br><br><br><br>
+        <div class="content-box" style="">
+                        <h2 style="text-align: left;">Welcome to Your PG Booking Application</h2>
+            <p>Here you can  book Your PG based on Your Location</p>
+            <div id="response-box" class="response-box"></div>
+            <h2 style="text-align: center;">Search & Filter PGs</h2>
+
+    <div class="filter-container" >
+        <input type="text" id="searchBar"  placeholder="Search by PG name,pincode,location...">
+
+        <select id="priceFilter">
+            <option value="">All Prices</option>
+            <option value="low">Below ₹5,000</option>
+            <option value="mid">₹5,000 - ₹10,000</option>
+            <option value="high">Above ₹10,000</option>
+        </select>
+
+        <div class="checkbox-group">
+            <label><input type="checkbox" class="amenity-filter" value="Food"> Food</label>
+            <label><input type="checkbox" class="amenity-filter" value="WiFi"> WiFi</label>
+            <label><input type="checkbox" class="amenity-filter" value="Laundry"> Laundry</label>
+            <label><input type="checkbox" class="amenity-filter" value="Parking"> Parking</label>
         </div>
+    </div><br><br>
+
+    <div class="pg-list" id="pgList"></div>
+    
+        </div>
+        
+
         <div style="padding-top: 3px;padding-bottom: 3px;">
-        <div id="response-box" class="response-box"></div>
+            <div id="response-box" class="response-box"></div>
         <footer style="background-color: #ffffff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  padding: 2px; text-align: center; color: #4a5568;">
             <div class="container1" style="margin: 0 auto; padding: 0 1rem;">
                 &copy; 2025 YourPG . All rights reserved.
@@ -81,43 +88,8 @@
     </div>
 
     
-    <script src="/admin/admin.js">
-
+    <script src="/Seeker/seeker.js">
         
-    </script>
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById("sidebar");
-            const mainContent = document.getElementById("main-content");
-            if (sidebar.style.left === "0px") {
-                sidebar.style.left = "-300px";
-                mainContent.style.marginLeft = "0";
-            } else {
-                sidebar.style.left = "0px";
-                mainContent.style.marginLeft = "300px";
-            }
-        }
-        async function profile() {
-            fetch("/api/profile", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: 'include'
-            }).then(response => {
-                response.json()  // Ensure this is handled properly as a promise
-            .then(data => {
-                if(data.mssg == "INVALID"){
-                window.location.href = '/auth';
-            }else{
-                
-                const div = document.querySelector(".containermanage");
-                div.innerHTML = `<strong> EMAIL:-</strong>&nbsp${data.email} <br> <strong>ROLE</strong>:-&nbsp${data.role} `;
-            }
-            })
-        });
-    }
-
     </script>
 </body>
 </html>
